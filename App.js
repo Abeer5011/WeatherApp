@@ -1,24 +1,28 @@
 import { StyleSheet, View, ImageBackground, TextInput, Text, Image } from "react-native"
 import { useState } from "react"
 import { FontAwesome } from "@expo/vector-icons"
+//////////////////////////////////////////////////////////
 export default function App() {
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState([])
   const [firstData, setFirstData] = useState([])
   const [secondtData, setSecondData] = useState([])
 
-  if (!firstData) {
-    return <Text>Lodaing...</Text>
-  }
   const apiKey = "017a37052fe5ae8904d95badf9f4770c"
 
   const weatherApi = async () => {
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+
       const data = await response.json()
-      setWeather(data.weather[0])
-      setFirstData(data)
-      setSecondData(data.main)
+
+      if (city) {
+        setWeather(data.weather[0])
+        setFirstData(data)
+        setSecondData(data.main)
+      } else {
+        alert("write a city in the search section")
+      }
     } catch (message) {
       alert(message)
       console.log(message)
@@ -36,18 +40,15 @@ export default function App() {
 
             <FontAwesome name="search" size={29} color="white" onPress={weatherApi} style={styles.icon} />
           </View>
-
-          <View style={styles.info}>
-            <Image
-              source={{ uri: `https://openweathermap.org/img/wn/${weather.icon}@2x.png` }}
-              height={100}
-              width={100}
-            />
-            <Text style={styles.name}>{firstData.name} </Text>
-            <Text style={styles.plus}>{weather.main}</Text>
-            <Text style={styles.plus}>{secondtData.temp}°C</Text>
-            <Text style={styles.plus}>{secondtData.humidity}%</Text>
-          </View>
+          {city ? (
+            <View style={styles.info}>
+              <Image source={{ uri: `http://openweathermap.org/img/wn/${weather.icon}@2x.png` }} />
+              <Text style={styles.name}>{firstData.name} </Text>
+              <Text style={styles.plus}>{weather.main}</Text>
+              <Text style={styles.plus}>temp: {secondtData.temp}°C</Text>
+              <Text style={styles.plus}>Humidity: {secondtData.humidity}%</Text>
+            </View>
+          ) : null}
         </ImageBackground>
       </View>
     </>
@@ -83,12 +84,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   icon: {
-    backgroundColor: "black",
     height: 35,
     borderRadius: 5,
     width: 35,
   },
   name: {
+    marginTop: 30,
     fontSize: 50,
     fontWeight: "600",
     color: "#fff",
