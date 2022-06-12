@@ -48,7 +48,9 @@ export default function App() {
               <Text style={styles.plus}>temp: {secondtData.temp}°C</Text>
               <Text style={styles.plus}>Humidity: {secondtData.humidity}%</Text>
             </View>
-          ) : null}
+          ) : (
+            <Text> </Text>
+          )}
         </ImageBackground>
       </View>
     </>
